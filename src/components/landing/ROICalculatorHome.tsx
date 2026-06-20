@@ -1,63 +1,58 @@
 import { motion } from "framer-motion"
 import { useState } from "react"
-import { TrendingUp, Target, Briefcase, Palette, Home, BarChart3 } from "lucide-react"
+import { Smartphone, BadgeCheck, ShieldCheck } from "lucide-react"
 
-const businessTypes = [
-  {
-    id: "retail",
-    name: "Ритейл",
-    icon: <Briefcase className="w-6 h-6" />,
-    multiplier: 3.2,
-    description: "E-commerce и магазины",
-  },
-  {
-    id: "real-estate",
-    name: "Недвижимость",
-    icon: <Home className="w-6 h-6" />,
-    multiplier: 4.1,
-    description: "Агенты и управление",
-  },
-  {
-    id: "artist",
-    name: "Креатив",
-    icon: <Palette className="w-6 h-6" />,
-    multiplier: 2.8,
-    description: "Блогеры и артисты",
-  },
-  {
-    id: "professional",
-    name: "B2B услуги",
-    icon: <Target className="w-6 h-6" />,
-    multiplier: 3.7,
-    description: "Консалтинг и сервисы",
-  },
+// Базовые цены iPhone (новый, идеальное состояние) — ориентир на июнь 2026, в рублях
+const models = [
+  { id: "iphone-13", name: "iPhone 13", base: 42000 },
+  { id: "iphone-14", name: "iPhone 14", base: 52000 },
+  { id: "iphone-15", name: "iPhone 15", base: 64000 },
+  { id: "iphone-15-pro", name: "iPhone 15 Pro", base: 82000 },
+  { id: "iphone-16", name: "iPhone 16", base: 78000 },
+  { id: "iphone-16-pro", name: "iPhone 16 Pro", base: 98000 },
+  { id: "iphone-16-pro-max", name: "iPhone 16 Pro Max", base: 122000 },
 ]
 
-// Функция форматирования чисел с пробелами (русская локаль)
-const formatRub = (num: number) => {
-  return num.toLocaleString('ru-RU')
-}
+// Множитель за объём памяти
+const storages = [
+  { id: "128", name: "128 ГБ", multiplier: 1 },
+  { id: "256", name: "256 ГБ", multiplier: 1.12 },
+  { id: "512", name: "512 ГБ", multiplier: 1.28 },
+  { id: "1024", name: "1 ТБ", multiplier: 1.45 },
+]
+
+// Состояние телефона
+const conditions = [
+  { id: "new", name: "Новый", description: "Запечатан, без вскрытия", multiplier: 1 },
+  { id: "excellent", name: "Отличное", description: "Без царапин, как новый", multiplier: 0.82 },
+  { id: "good", name: "Хорошее", description: "Лёгкие следы носки", multiplier: 0.68 },
+  { id: "used", name: "Среднее", description: "Заметные потёртости", multiplier: 0.52 },
+]
+
+const formatRub = (num: number) => num.toLocaleString("ru-RU")
 
 export default function ROICalculatorHome() {
-  // Бюджет в рублях (100 000 - 2 500 000)
-  const [selectedBudget, setSelectedBudget] = useState(500000)
-  const [selectedBusiness, setSelectedBusiness] = useState("retail")
+  const [selectedModel, setSelectedModel] = useState("iphone-15-pro")
+  const [selectedStorage, setSelectedStorage] = useState("256")
+  const [selectedCondition, setSelectedCondition] = useState("excellent")
+  const [batteryHealth, setBatteryHealth] = useState(92)
 
-  const selectedBusinessType = businessTypes.find((b) => b.id === selectedBusiness)
-  const multiplier = selectedBusinessType?.multiplier || 3.2
+  const model = models.find((m) => m.id === selectedModel)!
+  const storage = storages.find((s) => s.id === selectedStorage)!
+  const condition = conditions.find((c) => c.id === selectedCondition)!
 
-  const calculateROI = (budget: number) => {
-    const baseReturn = budget * multiplier
-    const scaleFactor = budget / 1000000
-    return Math.round(baseReturn * (1 + scaleFactor * 0.3))
-  }
+  // Влияние состояния аккумулятора (100% = норма, ниже 80% — заметная скидка)
+  const batteryFactor = 0.85 + (batteryHealth / 100) * 0.15
 
-  const calculateMonthlyRevenue = (budget: number) => {
-    return Math.round(calculateROI(budget) / 12)
-  }
+  const estimate = Math.round(
+    (model.base * storage.multiplier * condition.multiplier * batteryFactor) / 500
+  ) * 500
+
+  const low = Math.round((estimate * 0.93) / 500) * 500
+  const high = Math.round((estimate * 1.07) / 500) * 500
 
   return (
-    <section className="py-24 bg-black relative backdrop-blur-sm">
+    <section id="calculator" className="py-24 bg-black relative backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -66,14 +61,13 @@ export default function ROICalculatorHome() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">Рассчитайте ROI</h2>
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">Калькулятор стоимости iPhone</h2>
           <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-            Узнайте, какую выручку вы можете получить с нашими маркетинговыми стратегиями
+            Узнайте, за сколько можно продать ваш телефон. Цены актуальны на июнь 2026 года.
           </p>
         </motion.div>
 
         <div className="bg-gray-900/40 border border-gray-700/30 rounded-3xl p-8 backdrop-blur-sm relative overflow-hidden">
-          {/* Subtle animated background */}
           <motion.div
             className="absolute inset-0 opacity-20"
             animate={{
@@ -91,159 +85,138 @@ export default function ROICalculatorHome() {
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Controls */}
             <div className="space-y-8">
-              {/* Business Type Selection */}
+              {/* Model */}
               <div>
-                <label className="block text-lg font-medium text-white mb-4">Выберите тип бизнеса</label>
+                <label className="block text-lg font-medium text-white mb-4">Модель iPhone</label>
                 <div className="grid grid-cols-2 gap-3">
-                  {businessTypes.map((business) => (
+                  {models.map((m) => (
                     <motion.button
-                      key={business.id}
+                      key={m.id}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      onClick={() => setSelectedBusiness(business.id)}
+                      onClick={() => setSelectedModel(m.id)}
                       className={`p-4 rounded-xl border transition-all duration-200 text-left ${
-                        selectedBusiness === business.id
+                        selectedModel === m.id
                           ? "bg-blue-500/20 border-blue-500/50 text-white"
                           : "bg-gray-800/50 border-gray-700/50 text-gray-300 hover:border-gray-600/50"
                       }`}
                     >
-                      <div className="flex items-center space-x-3 mb-2">
-                        <div
-                          className={`p-2 rounded-lg ${
-                            selectedBusiness === business.id ? "bg-blue-500/30" : "bg-gray-700/50"
-                          }`}
-                        >
-                          {business.icon}
+                      <div className="flex items-center space-x-3">
+                        <div className={`p-2 rounded-lg ${selectedModel === m.id ? "bg-blue-500/30" : "bg-gray-700/50"}`}>
+                          <Smartphone className="w-5 h-5" />
                         </div>
-                        <div>
-                          <div className="font-medium">{business.name}</div>
-                          <div className="text-xs opacity-70">{business.description}</div>
-                        </div>
+                        <div className="font-medium text-sm">{m.name}</div>
                       </div>
                     </motion.button>
                   ))}
                 </div>
               </div>
 
-              {/* Budget Slider */}
+              {/* Storage */}
               <div>
-                <label className="block text-lg font-medium text-white mb-4">Месячный бюджет на маркетинг</label>
-                <div className="relative">
-                  <input
-                    type="range"
-                    min="100000"
-                    max="2500000"
-                    step="50000"
-                    value={selectedBudget}
-                    onChange={(e) => setSelectedBudget(Number(e.target.value))}
-                    className="w-full h-3 bg-gray-700 rounded-lg appearance-none cursor-pointer"
-                    style={{
-                      background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${((selectedBudget - 100000) / (2500000 - 100000)) * 100}%, #374151 ${((selectedBudget - 100000) / (2500000 - 100000)) * 100}%, #374151 100%)`,
-                    }}
-                  />
-                  <div className="flex justify-between text-sm text-gray-400 mt-2">
-                    <span>100 тыс.</span>
-                    <span>2.5 млн</span>
-                  </div>
-                </div>
-                <div className="text-center mt-4">
-                  <span className="text-3xl font-bold text-white">{formatRub(selectedBudget)} &#8381;</span>
-                  <span className="text-gray-400 ml-2">в месяц</span>
+                <label className="block text-lg font-medium text-white mb-4">Объём памяти</label>
+                <div className="grid grid-cols-4 gap-3">
+                  {storages.map((s) => (
+                    <motion.button
+                      key={s.id}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setSelectedStorage(s.id)}
+                      className={`py-3 rounded-xl border text-sm font-medium transition-all duration-200 ${
+                        selectedStorage === s.id
+                          ? "bg-purple-500/20 border-purple-500/50 text-white"
+                          : "bg-gray-800/50 border-gray-700/50 text-gray-300 hover:border-gray-600/50"
+                      }`}
+                    >
+                      {s.name}
+                    </motion.button>
+                  ))}
                 </div>
               </div>
 
-              {/* Data Disclaimer */}
-              <div className="bg-gray-800/30 border border-gray-700/50 rounded-xl p-4">
-                <div className="flex items-center space-x-3 mb-2">
-                  <BarChart3 className="w-5 h-5 text-blue-400" />
-                  <span className="text-sm font-medium text-white">На основе реальных данных</span>
+              {/* Condition */}
+              <div>
+                <label className="block text-lg font-medium text-white mb-4">Состояние</label>
+                <div className="grid grid-cols-2 gap-3">
+                  {conditions.map((c) => (
+                    <motion.button
+                      key={c.id}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setSelectedCondition(c.id)}
+                      className={`p-4 rounded-xl border transition-all duration-200 text-left ${
+                        selectedCondition === c.id
+                          ? "bg-green-500/20 border-green-500/50 text-white"
+                          : "bg-gray-800/50 border-gray-700/50 text-gray-300 hover:border-gray-600/50"
+                      }`}
+                    >
+                      <div className="font-medium">{c.name}</div>
+                      <div className="text-xs opacity-70">{c.description}</div>
+                    </motion.button>
+                  ))}
                 </div>
-                <p className="text-xs text-gray-400 leading-relaxed">
-                  Прогнозы основаны на реальных показателях наших клиентов из аналогичных
-                  отраслей и бюджетных категорий. Индивидуальные результаты могут отличаться.
-                </p>
+              </div>
+
+              {/* Battery */}
+              <div>
+                <label className="block text-lg font-medium text-white mb-4">Состояние аккумулятора</label>
+                <input
+                  type="range"
+                  min="60"
+                  max="100"
+                  step="1"
+                  value={batteryHealth}
+                  onChange={(e) => setBatteryHealth(Number(e.target.value))}
+                  className="w-full h-3 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                  style={{
+                    background: `linear-gradient(to right, #22c55e 0%, #22c55e ${((batteryHealth - 60) / 40) * 100}%, #374151 ${((batteryHealth - 60) / 40) * 100}%, #374151 100%)`,
+                  }}
+                />
+                <div className="text-center mt-4">
+                  <span className="text-3xl font-bold text-white">{batteryHealth}%</span>
+                  <span className="text-gray-400 ml-2">ёмкости</span>
+                </div>
               </div>
             </div>
 
-            {/* Results */}
-            <div className="space-y-8">
-              {/* ROI Circle */}
-              <div className="relative w-48 h-48 mx-auto">
-                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="35"
-                    stroke="currentColor"
-                    strokeWidth="6"
-                    fill="none"
-                    className="text-gray-700"
-                  />
-                  <motion.circle
-                    cx="50"
-                    cy="50"
-                    r="35"
-                    stroke="url(#gradient)"
-                    strokeWidth="6"
-                    fill="none"
-                    strokeLinecap="round"
-                    initial={{ strokeDasharray: "0 219.8" }}
-                    animate={{
-                      strokeDasharray: `${Math.min((calculateROI(selectedBudget) / (selectedBudget * 8)) * 219.8, 219.8)} 219.8`,
-                    }}
-                    transition={{ duration: 1, ease: "easeOut" }}
-                  />
-                  <defs>
-                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#3b82f6" />
-                      <stop offset="50%" stopColor="#8b5cf6" />
-                      <stop offset="100%" stopColor="#06d6a0" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center">
-                    <motion.div
-                      key={`${selectedBudget}-${selectedBusiness}`}
-                      initial={{ scale: 0.8, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      className="text-2xl font-bold text-white"
-                    >
-                      {Math.round((calculateROI(selectedBudget) / selectedBudget) * 100)}%
-                    </motion.div>
-                    <div className="text-gray-400 text-sm">ROI</div>
-                  </div>
+            {/* Result */}
+            <div className="flex flex-col justify-center space-y-8">
+              <div className="bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 border border-gray-700/50 rounded-3xl p-8 text-center">
+                <div className="text-gray-400 text-sm mb-2">Примерная стоимость продажи</div>
+                <motion.div
+                  key={estimate}
+                  initial={{ scale: 0.85, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="text-5xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-3"
+                >
+                  {formatRub(estimate)} &#8381;
+                </motion.div>
+                <div className="text-gray-400 text-sm">
+                  Диапазон: {formatRub(low)} — {formatRub(high)} &#8381;
                 </div>
               </div>
 
-              {/* Revenue Cards */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700/50 text-center">
-                  <div className="w-8 h-8 text-green-400 mx-auto mb-2 flex items-center justify-center text-2xl font-bold">&#8381;</div>
-                  <motion.div
-                    key={`monthly-${selectedBudget}-${selectedBusiness}`}
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    className="text-2xl font-bold text-white mb-1"
-                  >
-                    {formatRub(calculateMonthlyRevenue(selectedBudget))}
-                  </motion.div>
-                  <div className="text-gray-400 text-sm">Выручка/мес</div>
+                  <BadgeCheck className="w-8 h-8 text-green-400 mx-auto mb-2" />
+                  <div className="text-sm text-gray-300">{model.name}, {storage.name}</div>
                 </div>
-
                 <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700/50 text-center">
-                  <TrendingUp className="w-8 h-8 text-blue-400 mx-auto mb-2" />
-                  <motion.div
-                    key={`annual-${selectedBudget}-${selectedBusiness}`}
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    className="text-2xl font-bold text-white mb-1"
-                  >
-                    {formatRub(calculateROI(selectedBudget))}
-                  </motion.div>
-                  <div className="text-gray-400 text-sm">Выручка/год</div>
+                  <ShieldCheck className="w-8 h-8 text-blue-400 mx-auto mb-2" />
+                  <div className="text-sm text-gray-300">Состояние: {condition.name}</div>
                 </div>
               </div>
+
+              <a href="#get-started" className="block">
+                <button className="w-full bg-white text-black hover:bg-gray-100 font-medium py-4 rounded-xl transition-colors">
+                  Разместить объявление за {formatRub(estimate)} &#8381;
+                </button>
+              </a>
+
+              <p className="text-xs text-gray-500 text-center leading-relaxed">
+                Оценка ориентировочная и основана на средних ценах площадки на июнь 2026 года.
+                Итоговая стоимость зависит от спроса и комплектации.
+              </p>
             </div>
           </div>
         </div>

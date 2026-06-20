@@ -6,9 +6,9 @@ import { cn } from "@/lib/utils"
 
 export default function Hero() {
   const stats = [
-    { value: 500, suffix: "+", label: "Успешных кампаний" },
-    { value: 98, suffix: "%", label: "Довольных клиентов" },
-    { value: 1, suffix: " млрд+", label: "Выручка клиентов" },
+    { value: 45000, suffix: "+", label: "Объявлений на площадке" },
+    { value: 98, suffix: "%", label: "Безопасных сделок" },
+    { value: 120000, suffix: "+", label: "Покупателей и продавцов" },
   ]
 
   return (
@@ -46,7 +46,7 @@ export default function Hero() {
                 className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 border border-white/30 rounded-full text-sm text-white font-medium backdrop-blur-sm"
               >
                 <div className="w-2 h-2 bg-green-400 rounded-full mr-3 animate-pulse"></div>
-                <span>Маркетинговое агентство полного цикла</span>
+                <span>Маркетплейс смартфонов №1 — продавай и покупай напрямую</span>
               </motion.div>
 
               <motion.h1
@@ -55,8 +55,8 @@ export default function Hero() {
                 transition={{ duration: 1, delay: 0.3 }}
                 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight"
               >
-                <span className="block text-white mb-2">МАРКЕТИНГОВОЕ</span>
-                <span className="block text-white mb-2">АГЕНТСТВО ДЛЯ</span>
+                <span className="block text-white mb-2">КУПИ И ПРОДАЙ</span>
+                <span className="block text-white mb-2">СМАРТФОН</span>
                 <span
                   className={cn(
                     "block mb-2 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent font-pacifico",
@@ -65,9 +65,9 @@ export default function Hero() {
                     textShadow: "0 0 40px rgba(147, 51, 234, 0.5)",
                   }}
                 >
-                  Бизнеса
+                  Выгодно
                 </span>
-                <span className="block text-gray-300">ЛЮБОГО МАСШТАБА</span>
+                <span className="block text-gray-300">БЕЗ ПОСРЕДНИКОВ</span>
               </motion.h1>
 
               <motion.p
@@ -76,8 +76,8 @@ export default function Hero() {
                 transition={{ duration: 0.8, delay: 0.6 }}
                 className="text-lg sm:text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto lg:mx-0"
               >
-                В Pulse Digital мы фокусируемся на анализе рыночного спроса, понимании поведения клиентов и реализации
-                стратегий, которые действительно работают. От SEO и SMM до контент-стратегии и email-маркетинга.
+                ФонМаркет — площадка, где можно купить и продать смартфон напрямую, без переплат магазину. Оцените свой
+                iPhone за минуту по актуальным ценам на июнь 2026, разместите объявление и заключайте сделки безопасно.
               </motion.p>
             </div>
 
@@ -87,10 +87,10 @@ export default function Hero() {
               transition={{ duration: 0.6, delay: 0.8 }}
               className="flex flex-col gap-6 items-center justify-center lg:justify-start lg:items-start"
             >
-              <a href="#get-started">
+              <a href="#calculator">
                 <AnimatedButton variant="slim" className="bg-white text-black hover:bg-gray-100">
                   <span className="flex items-center">
-                    Начать
+                    Оценить мой телефон
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </span>
                 </AnimatedButton>
@@ -119,8 +119,8 @@ export default function Hero() {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-white">Google Partner</p>
-                    <p className="text-xs text-gray-400">Сертификат</p>
+                    <p className="text-sm font-medium text-white">Безопасная сделка</p>
+                    <p className="text-xs text-gray-400">Защита платежей</p>
                   </div>
                 </div>
 
@@ -132,8 +132,8 @@ export default function Hero() {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-white">Аккредитация</p>
-                    <p className="text-xs text-gray-400">Рейтинг A+</p>
+                    <p className="text-sm font-medium text-white">Проверка IMEI</p>
+                    <p className="text-xs text-gray-400">Без блокировок</p>
                   </div>
                 </div>
 
@@ -144,8 +144,8 @@ export default function Hero() {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-white">Проверено</p>
-                    <p className="text-xs text-gray-400">Надежный партнер</p>
+                    <p className="text-sm font-medium text-white">Личный кабинет</p>
+                    <p className="text-xs text-gray-400">Профиль и сделки</p>
                   </div>
                 </div>
               </div>
