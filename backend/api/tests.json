@@ -1,0 +1,21 @@
+{
+  "tests": [
+    {
+      "name": "Get catalog",
+      "method": "GET",
+      "path": "/listings",
+      "expectedStatus": 200,
+      "expectedBody": {"listings": []},
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Register user",
+      "method": "POST",
+      "path": "/auth/register",
+      "body": {"email": "tester@fonmarket.ru", "password": "test123", "name": "Тестер"},
+      "expectedStatus": 200,
+      "expectedBody": {"session_id": "string"},
+      "bodyMatcher": "partial"
+    }
+  ]
+}
