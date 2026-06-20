@@ -1,3 +1,7 @@
-# nova-exploration-43
+# Pulse Digital - Маркетинговое агентство
 
-Initial repository setup for pr-poehali-dev/nova-exploration-43
+![Preview](preview.png)
+
+Современный лендинг для маркетингового агентства полного цикла. Включает hero-секцию с динамичным фоном, блоки услуг, статистику достижений (500+ кампаний, 98% довольных клиентов), партнерские бейджи (Google Partner), секции кейсов и контактов. Идеален для digital-агентств, SEO/SMM студий и маркетинговых команд.
+
+`"tags": ["agency", "dark", "gradient", "landing", "marketing", "testimonials"]`
